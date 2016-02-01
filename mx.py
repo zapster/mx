@@ -6418,6 +6418,7 @@ class ArgParser(ArgumentParser):
         self.add_argument('--mx-tests', action='store_true', help='load mxtests suite (mx debugging)')
         self.add_argument('--jdk', action='store', help='JDK to use for the "java" command', metavar='<tag:compliance>')
         self.add_argument('--version-conflict-resolution', dest='version_conflict_resolution', action='store', help='resolution mechanism used when a suite is imported with different versions', default='suite', choices=['suite', 'none', 'latest', 'ignore'])
+        self.add_argument('--printcmd', action='store_true', dest='printcmd', help='print commandline instead of execting it')
         if get_os() != 'windows':
             # Time outs are (currently) implemented with Unix specific functionality
             self.add_argument('--timeout', help='timeout (in seconds) for command', type=int, default=0, metavar='<secs>')
@@ -7086,6 +7087,10 @@ def run(args, nonZeroIsFatal=True, out=None, err=None, cwd=None, timeout=None, e
             assert '\n' not in arg
             print >> fp, arg
     env['MX_SUBPROCESS_COMMAND_FILE'] = subprocessCommandFile
+
+    if _opts.printcmd:
+        log(' '.join(map(pipes.quote, args)))
+        return 0
 
     if _opts.verbose:
         if _opts.very_verbose:
