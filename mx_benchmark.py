@@ -1204,7 +1204,7 @@ class JMHRunnerBenchmarkSuite(JMHBenchmarkSuiteBase):
 
     def benchmarkList(self, bmSuiteArgs):
         """Return all different JMH versions found."""
-        return list(JMHRunnerBenchmarkSuite.get_jmh_projects_dict().iterkeys())
+        return list(self.get_jmh_projects_dict().iterkeys())
 
     def createCommandLineArgs(self, benchmarks, bmSuiteArgs):
         if benchmarks is None:
@@ -1217,13 +1217,12 @@ class JMHRunnerBenchmarkSuite(JMHBenchmarkSuiteBase):
     def extraVmArgs(self):
         if not self._jmh_version:
             mx.abort("No JMH version selected!")
-        jmhProjects = JMHRunnerBenchmarkSuite.get_jmh_projects_dict()[self._jmh_version]
+        jmhProjects = self.get_jmh_projects_dict()[self._jmh_version]
         if not jmhProjects:
             mx.abort("No JMH benchmark projects found!")
         return mx.get_runtime_jvm_args([p.name for p in jmhProjects], jdk=mx.get_jdk())
 
-    @staticmethod
-    def get_jmh_projects_dict():
+    def get_jmh_projects_dict(self):
         # find all projects with a direct JMH dependency
         jmhProjects = {}
         projects = mx.projects_opt_limit_to_suites()
